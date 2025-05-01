@@ -1,10 +1,12 @@
 from fastapi import FastAPI
-from app.database import init_db
 import uvicorn
 import os
+from app.database import init_db
+from app.users.routes import router as users_router
 from contextlib import asynccontextmanager
 
 DEBUG = os.environ.get("DEBUG", "").strip().lower() in {"1", "true", "on", "yes"}
+
 
 # Use lifespan to handle startup/shutdown
 @asynccontextmanager
@@ -14,6 +16,10 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+
+# Include routers for different modules
+app.include_router(users_router, prefix="/api/users", tags=["Users"])
 
 @app.get("/")
 def read_root():

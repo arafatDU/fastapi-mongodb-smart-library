@@ -3,6 +3,7 @@ import uvicorn
 import os
 from app.database import init_db
 from app.users.routes import router as users_router
+from app.books.routes import router as books_router
 from contextlib import asynccontextmanager
 
 DEBUG = os.environ.get("DEBUG", "").strip().lower() in {"1", "true", "on", "yes"}
@@ -20,6 +21,7 @@ app = FastAPI(lifespan=lifespan)
 
 # Include routers for different modules
 app.include_router(users_router, prefix="/api/users", tags=["Users"])
+app.include_router(books_router, prefix="/api/books", tags=["Books"])
 
 @app.get("/")
 def read_root():
